@@ -6,6 +6,7 @@
 #include <mutex>
 #include <memory>
 #include "TrafficObject.h"
+#include "TrafficLight.h" //FP6
 
 // forward declarations to avoid include cycle
 class Street;
@@ -46,6 +47,8 @@ public:
     bool trafficLightIsGreen();
 
 private:
+
+	TrafficLight _trafficLight ; /*FP6*/
 
     // typical behaviour methods
     void processVehicleQueue();
