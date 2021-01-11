@@ -47,10 +47,10 @@ void TrafficLight::waitForGreen()
     // FP.5b : add the implementation of the method waitForGreen, in which an infinite while-loop 
     // runs and repeatedly calls the receive function on the message queue. 
     // Once it receives TrafficLightPhase::green, the method returns.
-    while (TrafficLight::getCurrentPhase() != green)
-    {
+    //while (TrafficLight::getCurrentPhase() != green)
+    //{
       TrafficLight::queue.receive();
-    }
+    //}
 }
 
 TrafficLightPhase TrafficLight::getCurrentPhase()
@@ -74,13 +74,13 @@ void TrafficLight::cycleThroughPhases()
     // Also, the while-loop should use std::this_thread::sleep_for to wait 1ms between two cycles. 
   
     // initalize variables
-    double cycleDuration = 1; // duration of a single simulation cycle in ms
+    
     std::chrono::time_point<std::chrono::system_clock> lastUpdate;
   
     std::random_device rd;//To get random value for cycle duration between 4 and 6 seconds.
     std::mt19937 eng(rd());
-    std::uniform_int_distribution<> distr(4, 6);
-
+    std::uniform_int_distribution<> distr(4000, 6000);
+    double cycleDuration = distr(eng); //Set the cycle duration with random value between 4 and 6
 
     // init stop watch
     lastUpdate = std::chrono::system_clock::now();
@@ -106,13 +106,14 @@ void TrafficLight::cycleThroughPhases()
           //sends an update method to the message queue using move semantics.
           TrafficLight::queue.send(std::move(_currentPhase));
           
+          // reset stop watch for next cycle
+          lastUpdate = std::chrono::system_clock::now();
+          
           
         }
-		// reset stop watch for next cycle
-        lastUpdate = std::chrono::system_clock::now();
+		
       
-        // Set the cycle duration with random value between 4 and 6
-        cycleDuration = distr(eng);
+        
  
     } // eof simulation loop
 
