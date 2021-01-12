@@ -13,8 +13,8 @@ T MessageQueue<T>::receive()
     // The received object should then be returned by the receive function. 
   
      std::unique_lock<std::mutex> lock(_mutex);
-     _cond.wait(lock);
-  
+     _cond.wait(lock,  [this] { return !_queue.empty(); });
+
   	 T result = std::move(_queue.back());
   	 _queue.pop_back();
   
@@ -47,9 +47,13 @@ void TrafficLight::waitForGreen()
     // FP.5b : add the implementation of the method waitForGreen, in which an infinite while-loop 
     // runs and repeatedly calls the receive function on the message queue. 
     // Once it receives TrafficLightPhase::green, the method returns.
-    while (TrafficLight::getCurrentPhase() != green)
+    while (true)
     {
       TrafficLight::queue.receive();
+      if(TrafficLight::getCurrentPhase() == green)
+      {
+        return;
+      }
     }
 }
 
