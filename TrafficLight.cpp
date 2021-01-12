@@ -49,8 +49,8 @@ void TrafficLight::waitForGreen()
     // Once it receives TrafficLightPhase::green, the method returns.
     while (true)
     {
-      TrafficLight::queue.receive();
-      if(TrafficLight::getCurrentPhase() == green)
+      TrafficLightPhase trafficLightPhase = TrafficLight::queue.receive();
+      if(trafficLightPhase == green)
       {
         return;
       }
@@ -113,12 +113,7 @@ void TrafficLight::cycleThroughPhases()
           // reset stop watch for next cycle
           lastUpdate = std::chrono::system_clock::now();
           
-          
         }
-		
-      
-        
- 
     } // eof simulation loop
 
   
